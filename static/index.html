@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign RAG - Website Chatbot</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="background-glows">
+        <div class="glow-orb glow-1"></div>
+        <div class="glow-orb glow-2"></div>
+    </div>
+    
+    <div class="app-container">
+        <!-- Sidebar - Ingestion Controls -->
+        <aside class="sidebar card">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h2>Sovereign RAG</h2>
+            </div>
+            <p class="brand-subtitle">Knowledge Base Oracle</p>
+
+            <hr class="divider">
+
+            <div class="config-section">
+                <h3>Ingest URL</h3>
+                
+                <div class="input-group">
+                    <label for="scrape-url">Target Website URL</label>
+                    <input type="url" id="scrape-url" placeholder="https://docs.example.com/" required>
+                </div>
+
+                <div class="params-row">
+                    <div class="input-group">
+                        <label for="max-depth">Max Depth</label>
+                        <select id="max-depth">
+                            <option value="0">0 (Only this page)</option>
+                            <option value="1">1 (Direct links)</option>
+                            <option value="2" selected>2 (Nested links)</option>
+                            <option value="3">3 (Deep scan)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="max-pages">Max Pages</label>
+                        <input type="number" id="max-pages" min="1" max="100" value="30">
+                    </div>
+                </div>
+
+                <button id="btn-scrape" class="btn btn-primary">
+                    <svg class="icon animate-spin hidden" id="spinner-scrape" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    <span id="txt-scrape">Synchronize Oracle</span>
+                </button>
+            </div>
+
+            <!-- Ingestion Progress Status -->
+            <div class="progress-section hidden" id="progress-container">
+                <div class="progress-header">
+                    <span class="progress-title" id="progress-status-text">Indexing site...</span>
+                    <span class="progress-pages" id="progress-count">0/30</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar-fill"></div>
+                </div>
+                <div class="console-log-box" id="console-logs">
+                    <div class="console-line system">Ready to scrape.</div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button id="btn-clear" class="btn btn-secondary">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Clear Ledger (DB)
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area - Chat Screen -->
+        <main class="chat-container card">
+            <header class="chat-header">
+                <div class="chat-header-info">
+                    <div class="status-indicator online"></div>
+                    <div>
+                        <h3>Oracle Query Portal</h3>
+                        <p class="status-text">Ready to resolve queries from synchronized database</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chat-messages" id="chat-messages-box">
+                <!-- Welcome Message -->
+                <div class="message system-msg">
+                    <div class="msg-avatar">🔮</div>
+                    <div class="msg-content-wrapper">
+                        <div class="msg-sender">System Oracle</div>
+                        <div class="msg-body">
+                            Welcome! Submit a website URL in the sidebar to recursively index its content. Once synchronized, you can ask questions here, and I will generate grounded answers citing the exact source pages.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat input area -->
+            <div class="chat-input-area">
+                <form id="chat-form" class="chat-input-wrapper">
+                    <input type="text" id="chat-input" placeholder="Query the Oracle..." autocomplete="off" required>
+                    <button type="submit" id="btn-send" class="btn-circle btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
