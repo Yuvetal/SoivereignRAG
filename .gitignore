@@ -1,0 +1,25 @@
+# Python environment caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environments/secrets configuration
+.env
+.env.local
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Application databases & indices
+chroma_db/
+test_chroma_db/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Project setup files not for git
+antigravity_build_prompt.md
+
