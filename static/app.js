@@ -87,8 +87,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    let isFetchingStatus = false;
+
     // Poll current scrape status from backend
     async function pollScrapeStatus(maxPagesExpected) {
+        if (isFetchingStatus) return;
+        isFetchingStatus = true;
+        
         try {
             const response = await fetch("/api/scrape/status");
             const data = await response.json();
@@ -111,29 +116,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Stop polling once the background job finishes
             if (!data.is_scraping) {
-                clearInterval(statusPollingInterval);
-                statusPollingInterval = null;
-                
-                // Re-enable crawl button
-                btnScrape.disabled = false;
-                spinnerScrape.classList.add("hidden");
-                txtScrape.textContent = "Synchronize Oracle";
-                
-                if (data.error) {
-                    addConsoleLog(`Synchronization failed: ${data.error}`, "error");
-                    addChatBubble("System Oracle", `Synchronization encountered an error: ${data.error}`, "system");
-                } else {
-                    addConsoleLog("Oracle Synchronization Completed Successfully!", "success");
-                    addChatBubble(
-                        "System Oracle", 
-                        `Oracle synchronized successfully. Index contains contents from ${data.pages_scraped} source pages. You may now start query execution.`, 
-                        "system"
-                    );
+                if (statusPollingInterval) {
+                    clearInterval(statusPollingInterval);
+                    statusPollingInterval = null;
+                    
+                    // Re-enable crawl button
+                    btnScrape.disabled = false;
+                    spinnerScrape.classList.add("hidden");
+                    txtScrape.textContent = "Synchronize Oracle";
+                    
+                    if (data.error) {
+                        addConsoleLog(`Synchronization failed: ${data.error}`, "error");
+                        addChatBubble("System Oracle", `Synchronization encountered an error: ${data.error}`, "system");
+                    } else {
+                        addConsoleLog("Oracle Synchronization Completed Successfully!", "success");
+                        addChatBubble(
+                            "System Oracle", 
+                            `Oracle synchronized successfully. Index contains contents from ${data.pages_scraped} source pages. You may now start query execution.`, 
+                            "system"
+                        );
+                    }
                 }
             }
         } catch (error) {
             console.error("Error polling scrape status:", error);
             addConsoleLog(`Poll failed: ${error}`, "error");
+        } finally {
+            isFetchingStatus = false;
         }
     }
 
